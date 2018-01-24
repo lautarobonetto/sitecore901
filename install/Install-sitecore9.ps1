@@ -4,8 +4,8 @@ $PSScriptRoot2 = "c:\installer_scripts"
 $XConnectCollectionService = $Env:SC_XConnectCollectionService
 $sitecoreSiteName = $Env:SC_sitecoreSiteName
 $SolrUrl = $Env:SC_SolrUrl
-$SolrRoot = "c:\solr"
-$SolrService = $Env:SC_SolrService
+#$SolrRoot = "c:\solr"
+#$SolrService = "Solr662"
 $SqlServer = $Env:SC_SqlServer
 $SqlAdminUser = $Env:SC_SqlAdminUser
 $SqlAdminPassword = $Env:SC_SqlAdminPassword
@@ -19,15 +19,15 @@ $certParams =
 Install-SitecoreConfiguration @certParams -Verbose
 
 #install solr cores for xdb 
-$solrParams = 
-@{
-    Path = "$PSScriptRoot2\xconnect-solr.json"     
-    SolrUrl = $SolrUrl    
-    SolrRoot = $SolrRoot  
-    SolrService = $SolrService  
-    CorePrefix = $prefix 
-} 
-Install-SitecoreConfiguration @solrParams -Verbose
+# $solrParams = 
+# @{
+#     Path = "$PSScriptRoot2\xconnect-solr.json"     
+#     SolrUrl = $SolrUrl    
+#     SolrRoot = $SolrRoot  
+#     SolrService = $SolrService  
+#     CorePrefix = $prefix 
+# } 
+# Install-SitecoreConfiguration @solrParams -Verbose
 
 #deploy xconnect instance 
 $xconnectParams = 
@@ -47,15 +47,15 @@ $xconnectParams =
 Install-SitecoreConfiguration @xconnectParams -Verbose
 
 #install solr cores for sitecore 
-$solrParams = 
-@{
-    Path = "$PSScriptRoot2\sitecore-solr.json"
-    SolrUrl = $SolrUrl
-    SolrRoot = $SolrRoot
-    SolrService = $SolrService     
-    CorePrefix = $prefix 
-} 
-Install-SitecoreConfiguration @solrParams -Verbose
+# $solrParams = 
+# @{
+#     Path = "$PSScriptRoot2\sitecore-solr.json"
+#     SolrUrl = $SolrUrl
+#     SolrRoot = $SolrRoot
+#     SolrService = $SolrService     
+#     CorePrefix = $prefix 
+# } 
+# Install-SitecoreConfiguration @solrParams -Verbose
  
 #install sitecore instance 
 $sitecoreParams = 
