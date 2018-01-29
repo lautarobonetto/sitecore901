@@ -20,14 +20,36 @@ ENV SC_SqlServer = MSSQL\\SQLEXPRESS
 ENV SC_SqlAdminUser = sa
 ENV SC_SqlAdminPassword = P4ssw0d123
 
+# Prepearing working folder
 RUN mkdir c:\\installer_scripts
-
 WORKDIR "c:\\installer_scripts"
+ADD ./install .
 
-ADD ./install/Install-sitecore9.ps1 .
+RUN Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope LocalMachine; Set-ExecutionPolicy Bypass -Scope Process -Force; 
 
-RUN Install-PackageProvider nuget -force
-RUN Register-PSRepository -Name SitecoreGallery -SourceLocation https://sitecore.myget.org/F/sc-powershell/api/v2; `
+# Installing Chocolatery to support Sitecore dependencies installations
+RUN iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'));
+
+# Installing Web Platform Installer 5
+RUN choco install webpi -y
+
+# Installing IIS WebAdministration module
+
+# Installing Web Deploy 3.6 for Hosting Servers
+RUN choco install webdeploy -y
+
+# Installing URL Rewrite Module 2.1
+RUN choco install urlrewrite -y
+
+# Installing Microsoft SQL Server Data-Tier Application Framework (DAC Fx) version 17.1
+RUN choco install sql2016-dacframework -y
+
+# Installing Microsoft SQL Server Transact-SQL ScriptDom
+RUN choco install sql2014-sqldom -y
+
+# Installing Sitecore Installer Framwork
+RUN Install-PackageProvider nuget -force; `
+    Register-PSRepository -Name SitecoreGallery -SourceLocation https://sitecore.myget.org/F/sc-powershell/api/v2; `
     Install-Module SitecoreInstallFramework -Force -SkipPublisherCheck; `
     Install-Module SitecoreFundamentals -Force -SkipPublisherCheck; `
     Import-Module SitecoreFundamentals -Force; `
@@ -35,6 +57,7 @@ RUN Register-PSRepository -Name SitecoreGallery -SourceLocation https://sitecore
 
 EXPOSE 80
 
+# Triggering Sitecore installation script
 CMD powershell .\\Install-sitecore9.ps1
 
 
